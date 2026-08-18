@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+results/*
+!results/.gitkeep
+packets/
+datasets/
+weights/
+*.ckpt
+*.pth
+*.pt
+*.npz
+*.npy

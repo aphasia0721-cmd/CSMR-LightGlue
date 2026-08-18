@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "CSMR-LightGlue: Conditional Spatial Match Repair"
+message: "If you use this code, cite the accompanying ICCIP paper."
+type: software
+authors:
+  - family-names: "[Author Family Name]"
+    given-names: "[Author Given Name]"
+    orcid: ""
+version: 0.1.0
+date-released: 2026-08-18
+license: MIT
+repository-code: "[Public repository URL after release]"

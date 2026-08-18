@@ -1,0 +1,4 @@
+-r requirements-demo.txt
+opencv-python>=4.8
+poselib>=2.0.2
+tqdm>=4.66

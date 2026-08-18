@@ -1,0 +1,9 @@
+{
+  "dataset": "ScanNet-1500",
+  "ratio": 0.95,
+  "grid_size": 4,
+  "min_matches": 20,
+  "max_score_drop": 0.10,
+  "ransac_threshold_px": 1.0,
+  "random_seeds": [0, 1, 2]
+}
