@@ -9,6 +9,10 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import platform
+import shlex
+import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -21,7 +25,7 @@ if str(ROOT) not in sys.path:
 
 from csmr.geometry import epipolar_errors, pose_error, pose_metrics  # noqa: E402
 from csmr.io import load_metadata, load_packet  # noqa: E402
-from csmr.metrics import error_auc, paired_bootstrap_auc_difference, summarize  # noqa: E402
+from csmr.metrics import error_auc, paired_bootstrap_auc_differences, summarize  # noqa: E402
 from csmr.selectors import (  # noqa: E402
     anms4d,
     grid_rr,
@@ -61,28 +65,28 @@ def evaluate_row(index: int, pair: dict, packet: dict, method: str, selected: np
     }
 
 
-def selections(packet: dict, args: argparse.Namespace) -> dict[str, tuple[np.ndarray, int]]:
+def selections(packet: dict, args: argparse.Namespace) -> dict[str, tuple[np.ndarray, float]]:
     p0, p1, scores = packet["points0"], packet["points1"], packet["scores"]
     size0, size1 = packet["image_size0"], packet["image_size1"]
-    output: dict[str, tuple[np.ndarray, int]] = {"All": (select_all(len(scores)), 0)}
+    output: dict[str, tuple[np.ndarray, float]] = {"All": (select_all(len(scores)), 0.0)}
     start = time.perf_counter(); output["Top-95%"] = (select_top_confidence(scores, args.ratio, args.min_matches), 0)
-    output["Top-95%"] = (output["Top-95%"][0], round((time.perf_counter() - start) * 1000.0))
+    output["Top-95%"] = (output["Top-95%"][0], (time.perf_counter() - start) * 1000.0)
     for seed in args.random_seeds:
         start = time.perf_counter()
         selected = select_random(len(scores), args.ratio, args.min_matches, seed)
-        output[f"Random-95%-seed{seed}"] = (selected, round((time.perf_counter() - start) * 1000.0))
+        output[f"Random-95%-seed{seed}"] = (selected, (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
-    output["Grid-RR"] = (grid_rr(p0, scores, size0, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches), round((time.perf_counter() - start) * 1000.0))
+    output["Grid-RR"] = (grid_rr(p0, scores, size0, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches), (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
-    output["4D-ANMS"] = (anms4d(p0, p1, scores, size0, size1, ratio=args.ratio, min_matches=args.min_matches), round((time.perf_counter() - start) * 1000.0))
+    output["4D-ANMS"] = (anms4d(p0, p1, scores, size0, size1, ratio=args.ratio, min_matches=args.min_matches), (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
-    output["Unconditional Spatial"] = (select_unconditional_spatial(p0, p1, scores, size0, size1, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches), round((time.perf_counter() - start) * 1000.0))
+    output["Unconditional Spatial"] = (select_unconditional_spatial(p0, p1, scores, size0, size1, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches), (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
     selected, _ = select_single_view_csmr(p0, p1, scores, size0, size1, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches, max_score_drop=args.max_score_drop)
-    output["Single-View Conditional"] = (selected, round((time.perf_counter() - start) * 1000.0))
+    output["Single-View Conditional"] = (selected, (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
     selected, _ = select_csmr(p0, p1, scores, size0, size1, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches, max_score_drop=args.max_score_drop)
-    output["CSMR"] = (selected, round((time.perf_counter() - start) * 1000.0))
+    output["CSMR"] = (selected, (time.perf_counter() - start) * 1000.0)
     return output
 
 
@@ -97,6 +101,13 @@ def main() -> None:
     parser.add_argument("--max-score-drop", type=float, default=0.10)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--random-seeds", type=int, nargs="+", default=[0, 1, 2])
+    parser.add_argument("--bootstrap-samples", type=int, default=5000)
+    parser.add_argument("--bootstrap-seed", type=int, default=20260814)
+    parser.add_argument(
+        "--code-commit",
+        default="",
+        help="Override the Git commit recorded in summary.json (normally auto-detected)",
+    )
     args = parser.parse_args()
     metadata = load_metadata(args.metadata)
     if args.limit > 0:
@@ -123,17 +134,54 @@ def main() -> None:
         result["mean_pose_ms"] = float(np.mean([row["pose_ms"] for row in subset]))
         result["mean_total_ms"] = result["mean_selection_ms"] + result["mean_pose_ms"]
         summaries[method] = result
-    report: dict = {"protocol": {"ratio": args.ratio, "grid_size": args.grid_size, "min_matches": args.min_matches, "max_score_drop": args.max_score_drop, "random_seeds": args.random_seeds}, "results": summaries}
+    command_argv = [str(sys.executable), *sys.argv]
+    git_executable = shutil.which("git")
+    code_commit = args.code_commit.strip()
+    if not code_commit and git_executable:
+        try:
+            code_commit = subprocess.check_output(
+                [git_executable, "-C", str(ROOT), "rev-parse", "HEAD"], text=True
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            code_commit = ""
+    if not code_commit:
+        code_commit = "unknown"
+    report: dict = {
+        "protocol": {
+            "ratio": args.ratio,
+            "grid_size": args.grid_size,
+            "min_matches": args.min_matches,
+            "max_score_drop": args.max_score_drop,
+            "random_seeds": args.random_seeds,
+            "bootstrap_samples": args.bootstrap_samples,
+            "bootstrap_seed": args.bootstrap_seed,
+            "bootstrap_unit": "image-pair row",
+            "multiple_comparison_correction": False,
+        },
+        "reproducibility": {
+            "command": shlex.join(command_argv),
+            "command_argv": command_argv,
+            "code_commit": code_commit,
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "working_directory": str(Path.cwd()),
+        },
+        "results": summaries,
+    }
     by_method = {method: [row for row in rows if row["method"] == method] for method in summaries}
     if "All" in by_method and "CSMR" in by_method:
-        report["CSMR_vs_All_AUC"] = paired_bootstrap_auc_difference(
+        report["CSMR_vs_All_AUC"] = paired_bootstrap_auc_differences(
             np.asarray([row["pose_error_deg"] for row in by_method["All"]]),
             np.asarray([row["pose_error_deg"] for row in by_method["CSMR"]]),
+            samples=args.bootstrap_samples,
+            seed=args.bootstrap_seed,
         )
     if "Top-95%" in by_method and "CSMR" in by_method:
-        report["CSMR_vs_Top95_AUC"] = paired_bootstrap_auc_difference(
+        report["CSMR_vs_Top95_AUC"] = paired_bootstrap_auc_differences(
             np.asarray([row["pose_error_deg"] for row in by_method["Top-95%"]]),
             np.asarray([row["pose_error_deg"] for row in by_method["CSMR"]]),
+            samples=args.bootstrap_samples,
+            seed=args.bootstrap_seed,
         )
     (args.output_dir / "summary.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))

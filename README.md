@@ -95,7 +95,11 @@ python scripts/evaluate_cached.py `
   --output-dir results\megadepth1500
 ```
 
-The command writes `per_pair.csv` and `summary.json`. The evaluator compares:
+The command writes `per_pair.csv` and `summary.json`. The JSON stores the exact
+command arguments, detected Git commit, Python/NumPy versions, protocol, all
+method summaries, and paired-bootstrap intervals for AUC@5, AUC@10, and
+AUC@20. If Git is unavailable on `PATH`, pass the exact revision explicitly
+with `--code-commit <40-character-hash>`. The evaluator compares:
 
 ```text
 All

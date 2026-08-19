@@ -1,6 +1,6 @@
 {
   "paper": "Conditional Spatial Match Repair for LightGlue-Based Relative Pose Estimation",
-  "code_commit": "674783725ba44319d2549994bd097b6a271365a7",
+  "code_commit": "7c346e712358c86b69425b628f74b165db7bff4a",
   "protocol": {
     "datasets": ["MegaDepth-1500", "ScanNet-1500"],
     "pairs_per_dataset": 1500,
@@ -65,6 +65,6 @@
     "ScanNet_CSMR_vs_All_AUC@10_difference_points": 1.01,
     "ScanNet_CSMR_vs_All_AUC@10_CI95_points": [0.12, 1.91],
     "CSMR_vs_Top-95%_main_CIs_include_zero": true,
-    "interpretation": "The ScanNet AUC@10 comparison against All is the strongest statistically supported result. Additional gains over Top-95% are positive but not statistically significant."
+    "interpretation": "Among the uncorrected descriptive main-comparison intervals, only the ScanNet AUC@10 comparison against All excludes zero. Additional gains over Top-95% are positive but their intervals include zero."
   }
 }

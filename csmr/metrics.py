@@ -43,8 +43,9 @@ def paired_bootstrap_auc_difference(
     method_errors: np.ndarray,
     samples: int = 5000,
     seed: int = 20260814,
+    threshold: int = 10,
 ) -> dict[str, float]:
-    """Bootstrap method-minus-baseline AUC differences by image-pair row."""
+    """Bootstrap one threshold's method-minus-baseline AUC difference."""
     baseline = np.asarray(baseline_errors, dtype=np.float64)
     method = np.asarray(method_errors, dtype=np.float64)
     if baseline.shape != method.shape or baseline.ndim != 1 or len(baseline) == 0:
@@ -53,9 +54,10 @@ def paired_bootstrap_auc_difference(
     differences = np.empty(int(samples), dtype=np.float64)
     for index in range(int(samples)):
         sample = rng.integers(0, len(baseline), len(baseline))
-        differences[index] = error_auc(method[sample], (10,))["auc@10"] - error_auc(
-            baseline[sample], (10,)
-        )["auc@10"]
+        key = f"auc@{int(threshold)}"
+        differences[index] = error_auc(method[sample], (int(threshold),))[key] - error_auc(
+            baseline[sample], (int(threshold),)
+        )[key]
     low, high = np.percentile(differences, (2.5, 97.5))
     return {
         "difference_mean": float(np.mean(differences)),
@@ -63,4 +65,25 @@ def paired_bootstrap_auc_difference(
         "ci95_high": float(high),
         "samples": int(samples),
         "seed": int(seed),
+        "threshold": int(threshold),
+    }
+
+
+def paired_bootstrap_auc_differences(
+    baseline_errors: np.ndarray,
+    method_errors: np.ndarray,
+    thresholds: tuple[int, ...] = (5, 10, 20),
+    samples: int = 5000,
+    seed: int = 20260814,
+) -> dict[str, dict[str, float]]:
+    """Return paired bootstrap results for every requested AUC threshold."""
+    return {
+        f"auc@{int(threshold)}": paired_bootstrap_auc_difference(
+            baseline_errors,
+            method_errors,
+            samples=samples,
+            seed=seed,
+            threshold=int(threshold),
+        )
+        for threshold in thresholds
     }

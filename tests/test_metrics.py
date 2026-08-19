@@ -4,7 +4,12 @@ import unittest
 
 import numpy as np
 
-from csmr.metrics import error_auc, paired_bootstrap_auc_difference, summarize
+from csmr.metrics import (
+    error_auc,
+    paired_bootstrap_auc_difference,
+    paired_bootstrap_auc_differences,
+    summarize,
+)
 
 
 class MetricsTests(unittest.TestCase):
@@ -32,6 +37,13 @@ class MetricsTests(unittest.TestCase):
         first = paired_bootstrap_auc_difference(baseline, method, samples=50, seed=7)
         second = paired_bootstrap_auc_difference(baseline, method, samples=50, seed=7)
         self.assertEqual(first, second)
+
+    def test_paired_bootstrap_reports_all_thresholds(self) -> None:
+        baseline = np.asarray([4.0, 7.0, 12.0, 18.0])
+        method = np.asarray([3.0, 6.0, 10.0, 16.0])
+        result = paired_bootstrap_auc_differences(baseline, method, samples=20, seed=7)
+        self.assertEqual(set(result), {"auc@5", "auc@10", "auc@20"})
+        self.assertEqual({value["threshold"] for value in result.values()}, {5, 10, 20})
 
 
 if __name__ == "__main__":
