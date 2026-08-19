@@ -1,6 +1,6 @@
 {
   "paper": "Conditional Spatial Match Repair for LightGlue-Based Relative Pose Estimation",
-  "code_commit": "7c346e712358c86b69425b628f74b165db7bff4a",
+  "code_commit": "35cf175aab0dbbf37aed3d8e5ca2c2162e4579d4",
   "protocol": {
     "datasets": ["MegaDepth-1500", "ScanNet-1500"],
     "pairs_per_dataset": 1500,
@@ -23,7 +23,7 @@
       "interval": "paired percentile 95% CI",
       "multiple_comparison_correction": false
     },
-    "random_seeds": [0, 1, 2]
+    "random_seeds": [17, 29, 41]
   },
   "main_results_auc_percent": {
     "MegaDepth-1500": {

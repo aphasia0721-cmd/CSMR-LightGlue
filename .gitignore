@@ -7,6 +7,11 @@ results/*
 !results/README.md
 !results/paper_reference_results.json
 !results/reproducibility_manifest.json
+!results/bootstrap_summary.json
+!results/per_pair_megadepth1500.csv
+!results/per_pair_scannet1500.csv
+!results/per_pair_spatial_megadepth1500.csv
+!results/per_pair_spatial_scannet1500.csv
 packets/
 datasets/
 weights/

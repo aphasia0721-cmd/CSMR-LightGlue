@@ -118,7 +118,10 @@ stored in `results/paper_reference_results.json` and
 contain no images, weights, or cached packets.
 
 For auditability, the release also includes `results/per_pair_megadepth1500.csv`,
-`results/per_pair_scannet1500.csv`, and `results/bootstrap_summary.json`.
+`results/per_pair_scannet1500.csv`, the direct-spatial control files
+`results/per_pair_spatial_megadepth1500.csv` and
+`results/per_pair_spatial_scannet1500.csv`, and
+`results/bootstrap_summary.json`.
 The CSV files expose the per-pair pose errors, match counts, inlier statistics,
 and selector timings used for the same-budget tables. The bootstrap file reports
 point estimates and paired 95% intervals for AUC@5, AUC@10, and AUC@20 for

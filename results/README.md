@@ -5,7 +5,7 @@ statistical values reported in the ICCIP manuscript. `reproducibility_manifest.j
 records the software environment, fixed seeds, model names, dataset metadata
 hashes, and source-file hashes used to produce those values.
 
-Both files identify commit `7c346e712358c86b69425b628f74b165db7bff4a`
+Both files identify commit `35cf175aab0dbbf37aed3d8e5ca2c2162e4579d4`
 as the paper-result reproduction snapshot. Later commits may improve packaging
 or reporting without changing the paper tables.
 
@@ -15,7 +15,9 @@ the commands in the repository README, then compare the generated
 `summary.json` with the reference file.
 
 For auditability, this release includes the per-pair files
-`per_pair_megadepth1500.csv` and `per_pair_scannet1500.csv`, plus
-`bootstrap_summary.json`. These are derived evaluation outputs rather than
-raw images or model packets; they expose the pose-error rows and all three
-paired-bootstrap thresholds used in the manuscript.
+`per_pair_megadepth1500.csv`, `per_pair_scannet1500.csv`, the direct-spatial
+control files `per_pair_spatial_megadepth1500.csv` and
+`per_pair_spatial_scannet1500.csv`, plus `bootstrap_summary.json`. These are
+derived evaluation outputs rather than raw images or model packets; they
+expose the pose-error rows and all three paired-bootstrap thresholds used in
+the manuscript.
