@@ -2,7 +2,7 @@
 
 All selectors operate on LightGlue match arrays.  A selector returns integer
 indices into the original arrays; it never changes the correspondence values.
-The default budget is K=max(20, round(ratio*N)), clipped to N.
+The default budget is K=min(N, max(20, round(ratio*N))).
 """
 
 from __future__ import annotations

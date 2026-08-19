@@ -1,0 +1,69 @@
+{
+  "paper": "Conditional Spatial Match Repair for LightGlue-Based Relative Pose Estimation",
+  "code_commit": "674783725ba44319d2549994bd097b6a271365a7",
+  "protocol": {
+    "datasets": ["MegaDepth-1500", "ScanNet-1500"],
+    "pairs_per_dataset": 1500,
+    "ratio": 0.95,
+    "grid_size": 4,
+    "min_matches": 20,
+    "max_score_drop": 0.10,
+    "ransac": {
+      "estimator": "PoseLib calibrated relative pose",
+      "max_epipolar_error_px": 1.0,
+      "success_prob": 0.99999,
+      "min_iterations": 20,
+      "max_iterations": 1000
+    },
+    "bootstrap": {
+      "samples": 5000,
+      "seed": 20260814,
+      "unit": "image-pair row",
+      "interval": "paired percentile 95% CI",
+      "multiple_comparison_correction": false
+    },
+    "random_seeds": [0, 1, 2]
+  },
+  "main_results_auc_percent": {
+    "MegaDepth-1500": {
+      "All": {"AUC@5": 55.09, "AUC@10": 70.16, "AUC@20": 81.78},
+      "Top-95%": {"AUC@5": 55.19, "AUC@10": 70.53, "AUC@20": 82.18},
+      "CSMR": {"AUC@5": 55.31, "AUC@10": 70.76, "AUC@20": 82.32}
+    },
+    "ScanNet-1500": {
+      "All": {"AUC@5": 18.01, "AUC@10": 34.85, "AUC@20": 51.66},
+      "Top-95%": {"AUC@5": 18.39, "AUC@10": 35.42, "AUC@20": 52.22},
+      "CSMR": {"AUC@5": 18.70, "AUC@10": 35.86, "AUC@20": 52.50}
+    }
+  },
+  "same_budget_auc_percent": {
+    "MegaDepth-1500": {
+      "Random-95%": [54.88, 70.10, 81.76],
+      "Top-95%": [55.19, 70.53, 82.18],
+      "Unconditional Spatial": [55.22, 70.46, 82.09],
+      "Grid-RR": [55.50, 70.60, 82.12],
+      "4D-ANMS": [55.42, 70.68, 82.16],
+      "Single-View Conditional": [55.37, 70.79, 82.32],
+      "CSMR": [55.31, 70.76, 82.32]
+    },
+    "ScanNet-1500": {
+      "Random-95%": [18.11, 35.25, 52.24],
+      "Top-95%": [18.39, 35.42, 52.22],
+      "Unconditional Spatial": [18.02, 35.09, 51.97],
+      "Grid-RR": [18.37, 35.36, 52.04],
+      "4D-ANMS": [18.64, 35.64, 52.18],
+      "Single-View Conditional": [18.79, 35.81, 52.34],
+      "CSMR": [18.70, 35.86, 52.50]
+    }
+  },
+  "runtime_ms_per_pair": {
+    "MegaDepth-1500": {"All": 118.045, "Top-95%": 116.867, "CSMR": 117.149},
+    "ScanNet-1500": {"All": 109.408, "Top-95%": 109.472, "CSMR": 109.668}
+  },
+  "statistical_summary": {
+    "ScanNet_CSMR_vs_All_AUC@10_difference_points": 1.01,
+    "ScanNet_CSMR_vs_All_AUC@10_CI95_points": [0.12, 1.91],
+    "CSMR_vs_Top-95%_main_CIs_include_zero": true,
+    "interpretation": "The ScanNet AUC@10 comparison against All is the strongest statistically supported result. Additional gains over Top-95% are positive but not statistically significant."
+  }
+}

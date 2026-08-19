@@ -4,6 +4,9 @@ __pycache__/
 .pytest_cache/
 results/*
 !results/.gitkeep
+!results/README.md
+!results/paper_reference_results.json
+!results/reproducibility_manifest.json
 packets/
 datasets/
 weights/

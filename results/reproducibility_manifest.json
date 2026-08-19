@@ -1,0 +1,45 @@
+{
+  "paper_code_commit": "674783725ba44319d2549994bd097b6a271365a7",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "driver": "596.49",
+    "vram_gb": 8
+  },
+  "software": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda_runtime": "12.8",
+    "cudnn": "91900",
+    "numpy": "2.4.4",
+    "opencv_python": "5.0.0.93",
+    "kornia": "0.8.3",
+    "poselib": "2.0.5",
+    "lightglue_source": "local LightGlue implementation; weights named superpoint_v1.pth and superpoint_lightglue_v0-1_arxiv.pth"
+  },
+  "preprocessing": {
+    "image_resize": "LightGlue ImagePreprocessor, side=long, antialias=true, interpolation=bilinear",
+    "maximum_dimension": 1024,
+    "max_keypoints": 2048,
+    "lightglue_depth_confidence": 0.95,
+    "lightglue_width_confidence": 0.99
+  },
+  "randomness": {
+    "selector_random_seeds": [0, 1, 2],
+    "paired_bootstrap_seed": 20260814,
+    "model_packet_generation_seed": 0
+  },
+  "sha256": {
+    "megadepth1500_pair_metadata": "6AA01108AA26B1D5F5F1AAD58A35514A173FEBD525F71CDAB312EF72EDBCCA19",
+    "scannet1500_pair_metadata": "AA7D5A7CA7218D19280DFBFAC056C2BBDFCAFC59DCBEF404BB59A0BBBEB8D8DF",
+    "superpoint_v1.pth": "52B6708629640CA883673B5D5C097C4DDAD37D8048B33F09C8CA0D69DB12C40E",
+    "superpoint_lightglue_v0-1_arxiv.pth": "6FF7040D0A497FC6639337946D7538DAE07428C18F77A067A0B5A960E7CC551A",
+    "lightglue_utils.py": "C6D9260656A24D826128B68C95D0B7798106D04F4244A77F3B1856573F58E690",
+    "paper_packet_runner.py": "15FF851E6996742868E364CD2CB3D22D78F2F11E7D996038CC5B2197123E7C1D",
+    "csmr_selectors.py": "42A4055411BB4995F592E372D2D36A3B248400C1D82D87B505CF668F2BDCFC64"
+  },
+  "notes": [
+    "Dataset images, pair files, model weights, and cached LightGlue packets are intentionally excluded because of size and licensing.",
+    "The pair metadata hashes identify the exact local protocols used for the paper tables.",
+    "All filtered selectors output exactly K = min(N, max(20, round(0.95*N))) matches."
+  ]
+}

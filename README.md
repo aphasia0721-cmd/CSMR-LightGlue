@@ -24,7 +24,7 @@ scripts/    Cached-packet evaluator and a dependency-light demo
 configs/    Example run configurations
 metadata/   Small schema/example metadata only
 tests/      Deterministic unit tests for the selectors
-results/    Reserved for generated results; no large outputs are committed
+results/    Paper reference tables and reproducibility manifest; no large outputs are committed
 ```
 
 The repository intentionally does not contain MegaDepth/ScanNet images,
@@ -107,6 +107,11 @@ Unconditional Spatial
 Single-View Conditional
 CSMR
 ```
+
+The expected paper summaries and the exact environment/checkpoint metadata are
+stored in `results/paper_reference_results.json` and
+`results/reproducibility_manifest.json`. The reference files are small and
+contain no images, weights, or cached packets.
 
 For the paper protocol, keep `--ratio 0.95`, `--grid-size 4`,
 `--min-matches 20`, and `--max-score-drop 0.10`. Do not tune these values on
