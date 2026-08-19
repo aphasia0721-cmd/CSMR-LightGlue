@@ -1,5 +1,5 @@
 {
-  "paper_code_commit": "674783725ba44319d2549994bd097b6a271365a7",
+  "paper_code_commit": "7c346e712358c86b69425b628f74b165db7bff4a",
   "hardware": {
     "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
     "driver": "596.49",
@@ -35,7 +35,8 @@
     "superpoint_lightglue_v0-1_arxiv.pth": "6FF7040D0A497FC6639337946D7538DAE07428C18F77A067A0B5A960E7CC551A",
     "lightglue_utils.py": "C6D9260656A24D826128B68C95D0B7798106D04F4244A77F3B1856573F58E690",
     "paper_packet_runner.py": "15FF851E6996742868E364CD2CB3D22D78F2F11E7D996038CC5B2197123E7C1D",
-    "csmr_selectors.py": "42A4055411BB4995F592E372D2D36A3B248400C1D82D87B505CF668F2BDCFC64"
+    "csmr_selectors.py": "FC9E67B58DF3E1FC8559E86655B3974F95E7748309311E8F358675DBBA1FE67B",
+    "metrics.py": "BED4A15E3480E5961E4C311A8BDD1A9C265121E65C6BE6A33D04F842B6977692"
   },
   "notes": [
     "Dataset images, pair files, model weights, and cached LightGlue packets are intentionally excluded because of size and licensing.",
