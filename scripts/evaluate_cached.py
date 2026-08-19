@@ -73,11 +73,11 @@ def selections(index: int, packet: dict, args: argparse.Namespace) -> dict[str, 
     output["Top-95%"] = (output["Top-95%"][0], (time.perf_counter() - start) * 1000.0)
     for seed in args.random_seeds:
         start = time.perf_counter()
-        # Use a deterministic per-pair seed, matching the paper's fixed-seed
-        # protocol instead of reusing one subset for every image pair.
-        selected = select_random(
-            len(scores), args.ratio, args.min_matches, seed * 1_000_003 + index
-        )
+        # Use the paper's deterministic per-pair permutation protocol instead
+        # of reusing one subset for every image pair.
+        target = len(select_top_confidence(scores, args.ratio, args.min_matches))
+        rng = np.random.default_rng(seed * 1_000_003 + index)
+        selected = rng.permutation(len(scores))[:target].astype(np.int64)
         output[f"Random-95%-seed{seed}"] = (selected, (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
     output["Grid-RR"] = (grid_rr(p0, scores, size0, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches), (time.perf_counter() - start) * 1000.0)
