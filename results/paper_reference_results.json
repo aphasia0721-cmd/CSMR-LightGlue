@@ -8,6 +8,7 @@
     "grid_size": 4,
     "min_matches": 20,
     "max_score_drop": 0.10,
+    "repair_target_policy": "Enumerate newly empty cells once from the initial Top-95% anchor; do not rebuild or prune the target sequence after replacements.",
     "ransac": {
       "estimator": "PoseLib calibrated relative pose",
       "max_epipolar_error_px": 1.0,

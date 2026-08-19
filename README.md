@@ -129,7 +129,9 @@ separate validation split.
 * **CSMR:** start with Top-95%, identify cells that were occupied before
   filtering but are empty afterward in either view, and replace a selected
   match only if it is redundant in both views and satisfies the confidence
-  drop bound.
+  drop bound. The repair-target sequence is enumerated once from the initial
+  Top-95% anchor and is not rebuilt or pruned after individual replacements;
+  occupancy counts are still updated for subsequent redundancy checks.
 
 ## Dataset and model setup
 

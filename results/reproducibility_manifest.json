@@ -40,6 +40,7 @@
   "notes": [
     "Dataset images, pair files, model weights, and cached LightGlue packets are intentionally excluded because of size and licensing.",
     "The pair metadata hashes identify the exact local protocols used for the paper tables.",
-    "All filtered selectors output exactly K = min(N, max(20, round(0.95*N))) matches."
+    "All filtered selectors output exactly K = min(N, max(20, round(0.95*N))) matches.",
+    "CSMR freezes its newly empty-cell target sequence from the initial Top-95% anchor; replacements update occupancy counts but do not rebuild or prune that sequence."
   ]
 }

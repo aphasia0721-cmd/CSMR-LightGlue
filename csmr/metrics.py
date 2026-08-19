@@ -12,7 +12,12 @@ def error_auc(errors: list[float] | np.ndarray, thresholds: tuple[int, ...] = (5
     sorted_errors = np.asarray([0.0] + sorted(values), dtype=np.float64)
     recall = np.linspace(0.0, 1.0, len(sorted_errors))
     result: dict[str, float] = {}
-    trapezoid = getattr(np, "trapezoid", np.trapz)
+    # NumPy 2.0 added trapezoid and NumPy 2.4 removed the trapz alias.  Avoid
+    # getattr(..., np.trapz), whose fallback is evaluated eagerly on 2.4.
+    if hasattr(np, "trapezoid"):
+        trapezoid = np.trapezoid
+    else:  # NumPy 1.24-1.x, which remains within the supported dependency range.
+        trapezoid = np.trapz
     for threshold in thresholds:
         index = int(np.searchsorted(sorted_errors, threshold))
         x = np.concatenate([sorted_errors[:index], [threshold]])

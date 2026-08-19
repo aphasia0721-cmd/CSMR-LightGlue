@@ -226,6 +226,12 @@ def _conditional_core(
     max_score_drop: float,
     check_views: Iterable[int],
 ) -> tuple[np.ndarray, SelectionDiagnostics]:
+    """Run conditional repair with targets frozen from the initial anchor set.
+
+    The paper protocol enumerates newly empty cells once, immediately after
+    Top-K selection.  Replacements update occupancy counts for redundancy
+    checks, but do not rebuild or prune that initial target sequence.
+    """
     if max_score_drop < 0.0:
         raise ValueError("max_score_drop must be non-negative.")
     target = _budget(len(values), ratio, min_matches)
@@ -244,6 +250,9 @@ def _conditional_core(
     total0 = np.bincount(cells0, minlength=grid_size * grid_size)
     total1 = np.bincount(cells1, minlength=grid_size * grid_size)
     rescued = 0
+    # Freeze the target order from the initial Top-K anchor. An earlier repair
+    # may also fill a later target through the other view; that later target is
+    # still processed, matching the experiments reported in the paper.
     missing: list[tuple[int, int]] = []
     for view in check_views:
         total, selected_counts = (total0, counts0) if view == 0 else (total1, counts1)
