@@ -50,6 +50,14 @@ class SelectorTests(unittest.TestCase):
         self.assert_same_budget(anms, expected)
         self.assert_same_budget(unconditional, expected)
 
+    def test_unconditional_control_is_not_grid_round_robin(self) -> None:
+        grid = grid_rr(self.points0, self.scores, self.size0, ratio=.50, min_matches=0)
+        unconditional = select_unconditional_spatial(
+            self.points0, self.points1, self.scores, self.size0, self.size1,
+            ratio=.50, min_matches=0,
+        )
+        self.assertFalse(np.array_equal(grid, unconditional))
+
     def test_csmr_preserves_budget_and_unique_indices(self) -> None:
         expected = len(select_top_confidence(self.scores, ratio=.50, min_matches=0))
         selected, diagnostics = select_csmr(

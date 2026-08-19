@@ -342,13 +342,40 @@ def select_unconditional_spatial(
     grid_size: int = 4,
     min_matches: int = 20,
 ) -> np.ndarray:
-    """Fixed-ratio spatial selector used as the unconditional control."""
+    """Fixed-ratio spatial selector used as the unconditional control.
+
+    This is the paper's unconditional control: reserve the strongest 20% of
+    matches and the highest-confidence match in every occupied cell of either
+    view, then fill the remaining budget by confidence. Unlike Grid-RR, it
+    does not cycle through cells round-robin and therefore provides a distinct
+    same-budget baseline.
+    """
     p0, p1, values = _validate_inputs(points0, points1, scores)
     target = _budget(len(values), ratio, min_matches)
     cells0 = cell_ids(p0, image_size0, grid_size)
     cells1 = cell_ids(p1, image_size1, grid_size)
-    selected = _round_robin_cells(values, cells0, target, grid_size)
-    if len(selected) < target:
-        missing = [i for i in np.argsort(-values, kind="mergesort") if i not in set(selected)]
-        selected = np.concatenate([selected, np.asarray(missing[: target - len(selected)], dtype=np.int64)])
-    return selected
+    if target == 0:
+        return np.empty(0, dtype=np.int64)
+
+    order = np.argsort(-values, kind="mergesort")
+    protected_count = min(target, max(0, int(np.ceil(len(values) * 0.20))))
+    reserved: set[int] = {int(index) for index in order[:protected_count]}
+    for cells in (cells0, cells1):
+        best_by_cell: dict[int, int] = {}
+        for index in order:
+            cell = int(cells[index])
+            if cell not in best_by_cell:
+                best_by_cell[cell] = int(index)
+        reserved.update(best_by_cell.values())
+
+    reserved_order = sorted(reserved, key=lambda index: (-values[index], index))
+    selected = reserved_order[:target]
+    selected_set = set(selected)
+    for index in order:
+        value = int(index)
+        if len(selected) >= target:
+            break
+        if value not in selected_set:
+            selected.append(value)
+            selected_set.add(value)
+    return np.asarray(selected, dtype=np.int64)

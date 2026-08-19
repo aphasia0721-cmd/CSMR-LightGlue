@@ -13,3 +13,9 @@ Large datasets, model weights, and cached LightGlue packets are intentionally
 not committed. Use the official MegaDepth-1500 and ScanNet-1500 protocols and
 the commands in the repository README, then compare the generated
 `summary.json` with the reference file.
+
+For auditability, this release includes the per-pair files
+`per_pair_megadepth1500.csv` and `per_pair_scannet1500.csv`, plus
+`bootstrap_summary.json`. These are derived evaluation outputs rather than
+raw images or model packets; they expose the pose-error rows and all three
+paired-bootstrap thresholds used in the manuscript.

@@ -117,6 +117,14 @@ stored in `results/paper_reference_results.json` and
 `results/reproducibility_manifest.json`. The reference files are small and
 contain no images, weights, or cached packets.
 
+For auditability, the release also includes `results/per_pair_megadepth1500.csv`,
+`results/per_pair_scannet1500.csv`, and `results/bootstrap_summary.json`.
+The CSV files expose the per-pair pose errors, match counts, inlier statistics,
+and selector timings used for the same-budget tables. The bootstrap file reports
+point estimates and paired 95% intervals for AUC@5, AUC@10, and AUC@20 for
+All vs. Top-95%, CSMR vs. All, and CSMR vs. Top-95%. Intervals are descriptive
+and are not multiplicity-adjusted.
+
 For the paper protocol, keep `--ratio 0.95`, `--grid-size 4`,
 `--min-matches 20`, and `--max-score-drop 0.10`. Do not tune these values on
 the final test set. The paper selects the engineering working point using a

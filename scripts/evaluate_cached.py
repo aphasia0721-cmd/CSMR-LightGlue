@@ -65,7 +65,7 @@ def evaluate_row(index: int, pair: dict, packet: dict, method: str, selected: np
     }
 
 
-def selections(packet: dict, args: argparse.Namespace) -> dict[str, tuple[np.ndarray, float]]:
+def selections(index: int, packet: dict, args: argparse.Namespace) -> dict[str, tuple[np.ndarray, float]]:
     p0, p1, scores = packet["points0"], packet["points1"], packet["scores"]
     size0, size1 = packet["image_size0"], packet["image_size1"]
     output: dict[str, tuple[np.ndarray, float]] = {"All": (select_all(len(scores)), 0.0)}
@@ -73,7 +73,11 @@ def selections(packet: dict, args: argparse.Namespace) -> dict[str, tuple[np.nda
     output["Top-95%"] = (output["Top-95%"][0], (time.perf_counter() - start) * 1000.0)
     for seed in args.random_seeds:
         start = time.perf_counter()
-        selected = select_random(len(scores), args.ratio, args.min_matches, seed)
+        # Use a deterministic per-pair seed, matching the paper's fixed-seed
+        # protocol instead of reusing one subset for every image pair.
+        selected = select_random(
+            len(scores), args.ratio, args.min_matches, seed * 1_000_003 + index
+        )
         output[f"Random-95%-seed{seed}"] = (selected, (time.perf_counter() - start) * 1000.0)
     start = time.perf_counter()
     output["Grid-RR"] = (grid_rr(p0, scores, size0, ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches), (time.perf_counter() - start) * 1000.0)
@@ -100,7 +104,7 @@ def main() -> None:
     parser.add_argument("--min-matches", type=int, default=20)
     parser.add_argument("--max-score-drop", type=float, default=0.10)
     parser.add_argument("--limit", type=int, default=0)
-    parser.add_argument("--random-seeds", type=int, nargs="+", default=[0, 1, 2])
+    parser.add_argument("--random-seeds", type=int, nargs="+", default=[17, 29, 41])
     parser.add_argument("--bootstrap-samples", type=int, default=5000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260814)
     parser.add_argument(
@@ -115,7 +119,7 @@ def main() -> None:
     rows: list[dict] = []
     for index, pair in enumerate(metadata):
         packet = load_packet(args.packet_dir, index)
-        for method, (selected, selection_ms) in selections(packet, args).items():
+        for method, (selected, selection_ms) in selections(index, packet, args).items():
             row = evaluate_row(index, pair, packet, method, selected, selection_ms)
             if method == "CSMR":
                 _, diag = select_csmr(packet["points0"], packet["points1"], packet["scores"], packet["image_size0"], packet["image_size1"], ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches, max_score_drop=args.max_score_drop)
