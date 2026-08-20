@@ -101,6 +101,14 @@ method summaries, and paired-bootstrap intervals for AUC@5, AUC@10, and
 AUC@20. If Git is unavailable on `PATH`, pass the exact revision explicitly
 with `--code-commit <40-character-hash>`. The evaluator compares:
 
+For paired fairness, the evaluator caches one PoseLib result for each unique
+selected-index set within an image pair and reuses it across methods. This
+prevents stochastic RANSAC variation from changing a result when two methods
+pass the same matches. Rows expose a `selection_signature` and `pose_reused`
+flag so this invariant can be audited. Timing summaries therefore describe
+the shared-pose evaluation protocol and should not be interpreted as isolated
+per-method wall-clock benchmarks.
+
 ```text
 All
 Top-95%

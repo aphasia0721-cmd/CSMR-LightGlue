@@ -42,7 +42,7 @@ def paired_bootstrap_auc_difference(
     baseline_errors: np.ndarray,
     method_errors: np.ndarray,
     samples: int = 5000,
-    seed: int = 20260814,
+    seed: int = 20260817,
     threshold: int = 10,
 ) -> dict[str, float]:
     """Bootstrap one threshold's method-minus-baseline AUC difference."""
@@ -74,7 +74,7 @@ def paired_bootstrap_auc_differences(
     method_errors: np.ndarray,
     thresholds: tuple[int, ...] = (5, 10, 20),
     samples: int = 5000,
-    seed: int = 20260814,
+    seed: int = 20260817,
 ) -> dict[str, dict[str, float]]:
     """Return paired bootstrap results for every requested AUC threshold."""
     return {

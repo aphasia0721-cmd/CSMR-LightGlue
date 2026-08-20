@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import platform
 import shlex
@@ -38,20 +39,33 @@ from csmr.selectors import (  # noqa: E402
 )
 
 
-def evaluate_row(index: int, pair: dict, packet: dict, method: str, selected: np.ndarray, selection_ms: float) -> dict:
-    start = time.perf_counter()
+def _selection_signature(selected: np.ndarray) -> str:
+    canonical = np.asarray(np.sort(np.asarray(selected, dtype=np.int64)), dtype="<i8")
+    return hashlib.sha256(canonical.tobytes()).hexdigest()[:16]
+
+
+def evaluate_row(
+    index: int,
+    pair: dict,
+    packet: dict,
+    method: str,
+    selected: np.ndarray,
+    selection_ms: float,
+    pose_result: tuple[float, float, int],
+    pose_ms: float,
+    pose_reused: bool,
+) -> dict:
     p0 = packet["points0"][selected]
     p1 = packet["points1"][selected]
-    rotation, translation, inliers = pose_metrics(
-        p0, p1, pair, packet["image_size0"], packet["image_size1"], 1.0
-    )
-    pose_ms = (time.perf_counter() - start) * 1000.0
+    rotation, translation, inliers = pose_result
     epi = epipolar_errors(p0, p1, pair)
     count = len(selected)
     return {
         "index": int(index),
         "scene_id": pair["scene_id"],
         "method": method,
+        "selection_signature": _selection_signature(selected),
+        "pose_reused": bool(pose_reused),
         "matches": int(count),
         "inliers": int(inliers),
         "inlier_ratio": float(inliers / max(count, 1)),
@@ -106,7 +120,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--random-seeds", type=int, nargs="+", default=[17, 29, 41])
     parser.add_argument("--bootstrap-samples", type=int, default=5000)
-    parser.add_argument("--bootstrap-seed", type=int, default=20260814)
+    parser.add_argument("--bootstrap-seed", type=int, default=20260817)
     parser.add_argument(
         "--code-commit",
         default="",
@@ -119,8 +133,22 @@ def main() -> None:
     rows: list[dict] = []
     for index, pair in enumerate(metadata):
         packet = load_packet(args.packet_dir, index)
+        pose_cache: dict[tuple[int, ...], tuple[tuple[float, float, int], float]] = {}
         for method, (selected, selection_ms) in selections(index, packet, args).items():
-            row = evaluate_row(index, pair, packet, method, selected, selection_ms)
+            key = tuple(int(value) for value in np.sort(np.asarray(selected, dtype=np.int64)))
+            cached = pose_cache.get(key)
+            if cached is None:
+                start = time.perf_counter()
+                p0 = packet["points0"][selected]
+                p1 = packet["points1"][selected]
+                pose = pose_metrics(p0, p1, pair, packet["image_size0"], packet["image_size1"], 1.0)
+                cached = (pose, (time.perf_counter() - start) * 1000.0)
+                pose_cache[key] = cached
+                pose_reused = False
+            else:
+                pose_reused = True
+            pose_result, pose_ms = cached
+            row = evaluate_row(index, pair, packet, method, selected, selection_ms, pose_result, pose_ms if not pose_reused else 0.0, pose_reused)
             if method == "CSMR":
                 _, diag = select_csmr(packet["points0"], packet["points1"], packet["scores"], packet["image_size0"], packet["image_size1"], ratio=args.ratio, grid_size=args.grid_size, min_matches=args.min_matches, max_score_drop=args.max_score_drop)
                 row.update({f"selector_{key}": value for key, value in diag.to_dict().items()})

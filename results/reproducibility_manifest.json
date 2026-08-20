@@ -1,5 +1,6 @@
 {
-  "paper_code_commit": "35cf175aab0dbbf37aed3d8e5ca2c2162e4579d4",
+  "paper_code_commit": "7eaf8600de1c64f998db002585bc51512b75e566",
+  "paper_code_commit_note": "The controlled evaluator changes are present in the working tree but could not be committed in this sandbox; verify the GitHub commit after publishing.",
   "hardware": {
     "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
     "driver": "596.49",
@@ -25,7 +26,7 @@
   },
   "randomness": {
     "selector_random_seeds": [17, 29, 41],
-    "paired_bootstrap_seed": 20260814,
+    "paired_bootstrap_seed": 20260817,
     "model_packet_generation_seed": 0
   },
   "sha256": {
@@ -37,7 +38,10 @@
     "paper_packet_runner.py": "15FF851E6996742868E364CD2CB3D22D78F2F11E7D996038CC5B2197123E7C1D",
     "csmr_selectors.py": "837D17E9BABA73E247F9CE1569F58129D76E652C83F4E56A48BDEBE36974F793",
     "metrics.py": "B468AAF96A5269C4CA809232E8654681F86DE1B8EE31F057C0247349B39582E4",
-    "evaluate_cached.py": "1F77246CF16C7D3C8A6A80136E084677918862B48E07F5B94D3B146C077D3369"
+    "evaluate_cached.py": "6DD08573CD6AA703AC535DB4AA6D36310B83F1FE758D0E629B0F46782EC939A8",
+    "metrics.py_controlled": "27586E154793A4F8BCC00B2422E932A1DED406AE339E46FF9FF335B85554A3F9",
+    "build_reference_results.py": "AAC631E03D4DDC53A8A61FC1FD131E65EA703C0D7B82548FE339165542A88C09",
+    "generate_packets.py": "CDE6C780EBA06231333DF9B71004B77AC7F039AEEDA5861D5CF111A76F7F3840"
   },
   "notes": [
     "Dataset images, pair files, model weights, and cached LightGlue packets are intentionally excluded because of size and licensing.",
@@ -46,7 +50,8 @@
     "CSMR freezes its newly empty-cell target sequence from the initial Top-95% anchor; replacements update occupancy counts but do not rebuild or prune that sequence.",
     "paper_code_commit and paper_reference_results.json identify the implementation snapshot used for paper-result reproduction; later reporting-only commits do not redefine that snapshot.",
     "Random-95% uses seeds 17, 29, and 41 combined with the pair index as seed = 1000003 * seed + pair index.",
-    "scripts/evaluate_cached.py records its actual command arguments, current code commit, environment, and AUC@5/@10/@20 paired-bootstrap intervals in summary.json.",
+    "scripts/evaluate_cached.py records its actual command arguments, current code commit, environment, selected-index signatures, pose reuse flags, and AUC@5/@10/@20 paired-bootstrap intervals in summary.json.",
+    "The controlled accuracy protocol caches one PoseLib result per unique selected-index set within each image pair; identical match sets therefore cannot receive different stochastic RANSAC outcomes.",
     "The released per-pair CSV files and bootstrap_summary.json are derived evaluation outputs; raw images, weights, and cached packets remain excluded."
   ]
 }
