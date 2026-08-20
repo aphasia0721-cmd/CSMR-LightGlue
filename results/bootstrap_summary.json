@@ -1,303 +1,117 @@
 {
   "protocol": {
     "samples": 5000,
-    "seed": 20260814,
+    "seed": 20260817,
     "unit": "image-pair row",
     "interval": "paired percentile 95% CI",
     "multiple_comparison_correction": false
   },
   "datasets": {
     "MegaDepth-1500": {
-      "point_estimates": [
-        {
-          "method": "All",
-          "threshold": 5,
-          "auc_percent": 55.08519146070535,
-          "pairs": 1500
+      "CSMR_vs_All": {
+        "auc@5": {
+          "difference_mean": 0.0005117518507446189,
+          "ci95_low": -0.008474561868185584,
+          "ci95_high": 0.009793124203042819,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 5
         },
-        {
-          "method": "All",
-          "threshold": 10,
-          "auc_percent": 70.15859604463365,
-          "pairs": 1500
+        "auc@10": {
+          "difference_mean": 0.004430356707450516,
+          "ci95_low": -0.002764669021144106,
+          "ci95_high": 0.01181549543396448,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 10
         },
-        {
-          "method": "All",
-          "threshold": 20,
-          "auc_percent": 81.77799382079216,
-          "pairs": 1500
-        },
-        {
-          "method": "Top-95%",
-          "threshold": 5,
-          "auc_percent": 55.18624278034826,
-          "pairs": 1500
-        },
-        {
-          "method": "Top-95%",
-          "threshold": 10,
-          "auc_percent": 70.52924311927228,
-          "pairs": 1500
-        },
-        {
-          "method": "Top-95%",
-          "threshold": 20,
-          "auc_percent": 82.18217850872236,
-          "pairs": 1500
-        },
-        {
-          "method": "CSMR",
-          "threshold": 5,
-          "auc_percent": 55.31338782706408,
-          "pairs": 1500
-        },
-        {
-          "method": "CSMR",
-          "threshold": 10,
-          "auc_percent": 70.75661768791042,
-          "pairs": 1500
-        },
-        {
-          "method": "CSMR",
-          "threshold": 20,
-          "auc_percent": 82.31774870568512,
-          "pairs": 1500
+        "auc@20": {
+          "difference_mean": 0.003988542997117936,
+          "ci95_low": -0.0014438650935212766,
+          "ci95_high": 0.00962101609696539,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 20
         }
-      ],
-      "comparisons": {
-        "Top-95%_vs_All": {
-          "auc@5": {
-            "difference_points": 0.10231092551653437,
-            "ci95_points": [
-              -0.7819732391885232,
-              1.0117784771823517
-            ],
-            "samples": 5000,
-            "threshold": 5
-          },
-          "auc@10": {
-            "difference_points": 0.37225677958380765,
-            "ci95_points": [
-              -0.32609986345471464,
-              1.0737032642644637
-            ],
-            "samples": 5000,
-            "threshold": 10
-          },
-          "auc@20": {
-            "difference_points": 0.4035211092446438,
-            "ci95_points": [
-              -0.13037054013863594,
-              0.9359424636718261
-            ],
-            "samples": 5000,
-            "threshold": 20
-          }
+      },
+      "CSMR_vs_Top-95%": {
+        "auc@5": {
+          "difference_mean": -0.0016260940781003632,
+          "ci95_low": -0.004394461152617096,
+          "ci95_high": 0.001150540141590794,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 5
         },
-        "CSMR_vs_All": {
-          "auc@5": {
-            "difference_points": 0.22862123491991698,
-            "ci95_points": [
-              -0.6908015101287124,
-              1.1486781935917956
-            ],
-            "samples": 5000,
-            "threshold": 5
-          },
-          "auc@10": {
-            "difference_points": 0.5994405001116223,
-            "ci95_points": [
-              -0.1532493080748193,
-              1.361927597758818
-            ],
-            "samples": 5000,
-            "threshold": 10
-          },
-          "auc@20": {
-            "difference_points": 0.5395328055092631,
-            "ci95_points": [
-              -0.006892444060641018,
-              1.1027008881624498
-            ],
-            "samples": 5000,
-            "threshold": 20
-          }
+        "auc@10": {
+          "difference_mean": -0.0009022437532165739,
+          "ci95_low": -0.0033263466438049117,
+          "ci95_high": 0.0015392424926284588,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 10
         },
-        "CSMR_vs_Top-95%": {
-          "auc@5": {
-            "difference_points": 0.1263103094033826,
-            "ci95_points": [
-              -0.6413705100296963,
-              0.8910218422007948
-            ],
-            "samples": 5000,
-            "threshold": 5
-          },
-          "auc@10": {
-            "difference_points": 0.2271837205278146,
-            "ci95_points": [
-              -0.3409064561072686,
-              0.7926607386753831
-            ],
-            "samples": 5000,
-            "threshold": 10
-          },
-          "auc@20": {
-            "difference_points": 0.1360116962646191,
-            "ci95_points": [
-              -0.29803179760170856,
-              0.565615221803867
-            ],
-            "samples": 5000,
-            "threshold": 20
-          }
+        "auc@20": {
+          "difference_mean": -0.000612044756296789,
+          "ci95_low": -0.002445964511082288,
+          "ci95_high": 0.0011055940410889138,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 20
         }
       }
     },
     "ScanNet-1500": {
-      "point_estimates": [
-        {
-          "method": "All",
-          "threshold": 5,
-          "auc_percent": 18.009208377536368,
-          "pairs": 1500
+      "CSMR_vs_All": {
+        "auc@5": {
+          "difference_mean": 0.0065252269359031,
+          "ci95_low": -0.0021134521197725864,
+          "ci95_high": 0.015050051919805863,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 5
         },
-        {
-          "method": "All",
-          "threshold": 10,
-          "auc_percent": 34.84733955119911,
-          "pairs": 1500
+        "auc@10": {
+          "difference_mean": 0.008678912375899201,
+          "ci95_low": -0.0001667502680560331,
+          "ci95_high": 0.017881525645379676,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 10
         },
-        {
-          "method": "All",
-          "threshold": 20,
-          "auc_percent": 51.66189323316497,
-          "pairs": 1500
-        },
-        {
-          "method": "Top-95%",
-          "threshold": 5,
-          "auc_percent": 18.388471319813597,
-          "pairs": 1500
-        },
-        {
-          "method": "Top-95%",
-          "threshold": 10,
-          "auc_percent": 35.418503011695655,
-          "pairs": 1500
-        },
-        {
-          "method": "Top-95%",
-          "threshold": 20,
-          "auc_percent": 52.2156210432551,
-          "pairs": 1500
-        },
-        {
-          "method": "CSMR",
-          "threshold": 5,
-          "auc_percent": 18.70449056957321,
-          "pairs": 1500
-        },
-        {
-          "method": "CSMR",
-          "threshold": 10,
-          "auc_percent": 35.86408878710367,
-          "pairs": 1500
-        },
-        {
-          "method": "CSMR",
-          "threshold": 20,
-          "auc_percent": 52.50125630273927,
-          "pairs": 1500
+        "auc@20": {
+          "difference_mean": 0.007912057642559402,
+          "ci95_low": -0.001032251347528984,
+          "ci95_high": 0.016558688258189666,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 20
         }
-      ],
-      "comparisons": {
-        "Top-95%_vs_All": {
-          "auc@5": {
-            "difference_points": 0.3805935399541998,
-            "ci95_points": [
-              -0.49548322536522704,
-              1.2157536539358487
-            ],
-            "samples": 5000,
-            "threshold": 5
-          },
-          "auc@10": {
-            "difference_points": 0.5716801956633137,
-            "ci95_points": [
-              -0.3552327260036296,
-              1.5132552938126569
-            ],
-            "samples": 5000,
-            "threshold": 10
-          },
-          "auc@20": {
-            "difference_points": 0.5549465085948128,
-            "ci95_points": [
-              -0.36973894236698557,
-              1.433734909547486
-            ],
-            "samples": 5000,
-            "threshold": 20
-          }
+      },
+      "CSMR_vs_Top-95%": {
+        "auc@5": {
+          "difference_mean": -0.0015338319822189367,
+          "ci95_low": -0.005554374531080054,
+          "ci95_high": 0.0025033457382419807,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 5
         },
-        "CSMR_vs_All": {
-          "auc@5": {
-            "difference_points": 0.6950582385642042,
-            "ci95_points": [
-              -0.15073839311533888,
-              1.539053355095734
-            ],
-            "samples": 5000,
-            "threshold": 5
-          },
-          "auc@10": {
-            "difference_points": 1.0178274325945993,
-            "ci95_points": [
-              0.09446615821670878,
-              1.925257679684642
-            ],
-            "samples": 5000,
-            "threshold": 10
-          },
-          "auc@20": {
-            "difference_points": 0.8392924412598562,
-            "ci95_points": [
-              -0.06470206800173545,
-              1.7276518564499121
-            ],
-            "samples": 5000,
-            "threshold": 20
-          }
+        "auc@10": {
+          "difference_mean": -0.00032513337988472244,
+          "ci95_low": -0.004756271131262148,
+          "ci95_high": 0.004034955531234082,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 10
         },
-        "CSMR_vs_Top-95%": {
-          "auc@5": {
-            "difference_points": 0.3144646986100045,
-            "ci95_points": [
-              -0.1567703284572082,
-              0.8066169662889345
-            ],
-            "samples": 5000,
-            "threshold": 5
-          },
-          "auc@10": {
-            "difference_points": 0.44614723693128555,
-            "ci95_points": [
-              -0.06954263469310674,
-              0.9620102017763951
-            ],
-            "samples": 5000,
-            "threshold": 10
-          },
-          "auc@20": {
-            "difference_points": 0.28434593266504343,
-            "ci95_points": [
-              -0.1797645693983746,
-              0.7450483434160583
-            ],
-            "samples": 5000,
-            "threshold": 20
-          }
+        "auc@20": {
+          "difference_mean": 0.0018974487003239943,
+          "ci95_low": -0.0024894181933263287,
+          "ci95_high": 0.006237556144633856,
+          "samples": 5000,
+          "seed": 20260817,
+          "threshold": 20
         }
       }
     }

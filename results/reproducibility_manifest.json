@@ -1,6 +1,5 @@
 {
-  "paper_code_commit": "7eaf8600de1c64f998db002585bc51512b75e566",
-  "paper_code_commit_note": "The controlled evaluator changes are present in the working tree but could not be committed in this sandbox; verify the GitHub commit after publishing.",
+  "paper_code_commit": "c86f4f830cc6cbdc17bcc5ffab0365d9843d24aa",
   "hardware": {
     "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
     "driver": "596.49",
